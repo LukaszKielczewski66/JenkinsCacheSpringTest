@@ -3,20 +3,19 @@ pipeline {
 
     stages {
         stage('Build backend') {
-            agent {
-                docker {
-                    image 'maven:3.6.3-openjdk-17'
-                }
-            }
             steps {
+                script {
+                    docker.withServer('tcp://localhost:2375') {
+                        sh 'docker info'
+                    }
+                }
                 echo 'Building..'
-                sh "sudo docker info"
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing..'
-                sh 'sudo mvn test'
+                sh 'mvn test'
             }
         }
         stage('Deploy') {
